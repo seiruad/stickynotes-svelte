@@ -17,11 +17,21 @@ export class LocalAPI {
     }
 
 
-    static updateNote(id, content) {
+    static updateNoteContent(id, content) {
         const notes = this.getNotes();
         for (let i = 0; i < notes.length; i++) {
             if (notes[i].id === id) {
                 notes[i].content = content
+            }
+        } 
+        this.saveNotes(notes);
+    }
+
+    static updateNoteColor(id, color) {
+        const notes = this.getNotes();
+        for (let i = 0; i < notes.length; i++) {
+            if (notes[i].id === id) {
+                notes[i].color = color
             }
         } 
         this.saveNotes(notes);

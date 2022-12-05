@@ -29,18 +29,26 @@
   let notes: Array<any> = LocalAPI.getNotes()
 
   function deleteIt(event) {
-    const isDelete = confirm('Вы хотите удалить эту заметку?')
-    if (!isDelete) {
-        return
-    }
+    // const isDelete = confirm('Вы хотите удалить эту заметку?')
+    // if (!isDelete) {
+    //     return
+    // }
 
     const id = event.detail.id
     notes = notes.filter(note => note.id !== id)
     LocalAPI.deleteNote(id)
   }
 
-  function update(event) {
-    LocalAPI.updateNote(event.detail.id, event.detail.content)
+  function updateContent(event) {
+    LocalAPI.updateNoteContent(event.detail.id, event.detail.content)
+  }
+
+  function updateColor(event) {
+    if(notes === undefined) {return}
+    const id = event.detail.id
+    const color = event.detail.color
+    LocalAPI.updateNoteColor(event.detail.id, event.detail.color)
+    notes = LocalAPI.getNotes()
   }
 
 </script>
@@ -49,7 +57,8 @@
   {#each notes as note, i (note.id)}
     <Note 
       note={note} 
-      on:update={update}
+      on:updateContent={updateContent}
+      on:updateColor={updateColor}
       on:delete={deleteIt}/>
   {/each}
 

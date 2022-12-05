@@ -1,12 +1,36 @@
 <script lang="ts">
     // import svelteLogo from './assets/svelte.svg'
+  import { fade, fly } from 'svelte/transition';
+  import PaletteColor from './PaletteColor.svelte'
+  import PaletteDelete from './PaletteDelete.svelte'
+  import paletteIcon from '../assets/icons/palette.svg'
   import svelteLogo from '../assets/icons/delete-s1.svg'
-
-  export let active;
-
+  import returnIcon from '../assets/icons/return.svg'
 
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
+
+  export let active;
+  export let color;
+
+
+  let status: 'none'|'delete'|'color' = 'none'
+  let open = false
+  let header = ''
+  let hiddden = false
+  const headerDict = {
+    none: '',
+    delete: 'Удалить?',
+    color: 'Выберете'
+  }
+
+
+  // $: {
+  //   header = headerDict[status]
+  //   console.log(status, header)
+  // }
+
+
 
 
   function deleteIt() {
@@ -15,46 +39,88 @@
     }
   }
 
+  function handleClick() {
+
+    
+  }
+
 </script>
 
 
 <div 
   class:hidden="{!active}"
-  class:active={active}
-  class="note-menu note-menu-close"
+  class:active="{active}"
+  class:open="{status !== 'none'}"
+  class:close="{status === 'none'}"
+  class:delete="{status === 'delete'}"
+  
+  class="note-menu"
   >
-  <!-- <button 
-    class="delete"
-    on:click={deleteIt}>delete</button> -->
 
-    <!-- <button 
-      class="button delete"
-      on:click={deleteIt}><svg xmlns="http://www.w3.org/2000/svg" height="22px" width="22px"><path d="M13.05 42q-1.25 0-2.125-.875T10.05 39V10.5H8v-3h9.4V6h13.2v1.5H40v3h-2.05V39q0 1.2-.9 2.1-.9.9-2.1.9Zm21.9-31.5h-21.9V39h21.9Zm-16.6 24.2h3V14.75h-3Zm8.3 0h3V14.75h-3Zm-13.6-24.2V39Z"/></svg></button> -->
-
-      <!-- <object type="image/svg+xml" data="./" class="logo">
-        Kiwi Logo 
-      </object> -->
-      
+    {#if status === 'none' || !status}
       <button
-        class="button" 
-        on:click={deleteIt}>
+        in:fade="{{
+          delay: 80,
+          duration: 80
+        }}"
+        class="button button-close color" 
+        on:click={() => status = 'color'}>
         <img 
-          class="logo"
-          src={svelteLogo} 
-          alt="x" 
-          />
+          class="logo logo-close" 
+          src={paletteIcon} 
+          alt="x"  />
       </button>
+      <button
+        in:fade="{{
+          delay: 80,
+          duration: 80
+        }}"
+        class="button button-close delete" 
+        on:click={() => status = 'delete'}>
+        <img 
+          class="logo logo-close" 
+          src={svelteLogo} 
+          alt="x"  />
+      </button>
+    {:else}
+      <div 
+        in:fade="{{
+          delay: 80,
+          duration: 80
+        }}"
+        class="nav">
+        <span class="header">{headerDict[status]}</span>
+        <button
+        class="button button-open return" 
+        on:click={() => status = 'none'}>
+          <img 
+            class="logo logo-open" 
+            src={returnIcon} 
+            alt="x"  />
+        </button>
+      </div>
+    {/if}
+
+    {#if status === 'delete'}
+      <PaletteDelete 
+        on:return={() => status = 'none'}
+        on:delete />
+    {:else if status === 'color'}
+      <PaletteColor
+        activeColor={color}
+        on:updateColor
+      />
+    {/if}
      
 </div>
 
   
 <style>
   .note-menu {
+    top: 0px;
     position: absolute;
-    height: 36px;
-    width: 100px;
     display: flex;
-    justify-content: center;
+    justify-content:space-around;
     align-items: center;
     /* border: 1px solid #c2c2c2; */
     border-radius: 10px;
@@ -63,11 +129,46 @@
     box-shadow: 0 4px 4px 0 rgba(0,0,0,.08);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+
+    transition: all .08s 0s;
+  }
+
+  .note-menu.close {
+    height: 36px;
+    width: 100px;
+    
   }
 
   .note-menu.active {
-    transition: box-shadow .08s 0s;
+    /* transition: box-shadow .08s 0s; */
     box-shadow: 0 4px 4px 0 rgba(0,0,0,.15);
+  }
+
+  .note-menu.open {
+    /* left: 16px; */
+    position: absolute;
+    display: block;
+    background-color: rgba(255,255,255,.87);
+    width: 172px;
+    height: 140px;
+    padding: 0 12px;
+    position: absolute;
+    border-radius: 10px;
+
+  }
+
+  .nav {
+    height: 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+
+  .header {
+    font-family: 'Roboto Slab', serif;
+    font-weight: 700;
+    user-select: none;
   }
 
   .button {
@@ -82,15 +183,19 @@
     text-align: center;
     text-decoration: none;
     cursor: pointer;
-    visibility: visible;
   }
 
-
+  .button-close {
+    visibility: visible;
+  }
 
   .logo {
     height: 22px;
     width: 22px;
     padding: 0;
+  }
+
+  .logo-close {
     visibility: visible;
     opacity: 1;
 
@@ -98,9 +203,11 @@
     transition: opacity .08s 0s;
   }
 
+  
+
   @media only screen and not (hover: none) {
-    .hidden .button,
-    .hidden .logo {
+    .hidden .button-close,
+    .hidden .logo-close {
       opacity: 0;
       height: 0;
       width: 0;
@@ -116,10 +223,12 @@
   .logo:hover {
     filter: drop-shadow(0 0 6em #ff3e00aa);
   }
-
-
-
 }
   
   
 </style>
+
+
+
+
+

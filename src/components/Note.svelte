@@ -9,7 +9,7 @@
     let value = note.content
 
     $: {
-      dispatch('update', {
+      dispatch('updateContent', {
         id: note.id,
         content: value
       });
@@ -21,39 +21,50 @@
       })
     }
 
+    function updateColorEvent(event) {
+      dispatch('updateColor', {
+        id: note.id,
+        color: event.detail.color
+      })
+    }
+
     let active = false
-    let focus = false
+
+    let mouseIn = false
+    let focusIn = false
 
         
 </script>
 
 <main
   on:mouseenter={() => {
-    active = true
+    mouseIn = true
   }}
   on:mouseleave ={() => {
-    active = false || focus
+    mouseIn = false
   }}
 >
     <textarea 
         class:defaultv1="{note.color === 'defaultv1' || !note.color}"
         class:greenv1="{note.color === 'greenv1'}"
         class:redv1="{note.color === 'redv1'}"
-        class:active={active}
+        class:active={mouseIn || focusIn}
         class="note"
+        spellcheck="false"
+        placeholder="Напишите"
         on:focusin={() => {
-          focus = true
-          active = true
+          focusIn = true
         }}
         on:focusout ={() => {
-          focus = false 
-          active = false
+          focusIn = false 
         }}
         bind:value></textarea>
 
     <NoteMenu 
-      active={active}
-      on:delete={deleteEvent} />
+      active={mouseIn || focusIn}
+      color={note.color}
+      on:delete={deleteEvent}
+      on:updateColor={updateColorEvent} />
 </main>
   
 <style>
@@ -97,7 +108,6 @@
 
 
     transition: box-shadow .08s 0s;
-
   }
 
   .note::selection {
@@ -115,9 +125,17 @@
   .note.redv1 {
     border: 1px solid #870000;
     background-color: var(--color-note-redv1);
-    color: #fff;
+    color: #fff;  
 
-    
+  }
+
+  .note.redv1::placeholder {
+    color: #e0e0e0;
+  }
+
+  .note.active.redv1 {
+    border: 1px solid #212121;
+    box-shadow: 0 4px 4px 0 rgba(0,0,0,.18);
   }
 
   .note.redv1::selection {
