@@ -109,6 +109,7 @@
       <PaletteColor
         activeColor={color}
         on:updateColor
+        on:return={() => status = 'none'}
       />
     {/if}
      
@@ -166,7 +167,7 @@
   }
 
   .header {
-    font-family: 'Roboto Slab', serif;
+    /* font-family: 'Roboto Slab', serif; */
     font-weight: 700;
     user-select: none;
   }

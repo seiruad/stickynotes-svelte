@@ -91,7 +91,7 @@
     padding-top: 30px;
     resize: none;
     box-sizing: border-box;
-    border: 1px solid #eeeeee;
+    border: 1px solid #e0e0e0;
     border-radius: 10px;
     box-shadow: 0 4px 4px 0 rgba(0,0,0,.08);
     outline: none;
@@ -115,6 +115,7 @@
   }
 
   .note.active {
+    border: 1px solid #bdbdbd;
     box-shadow: 0 4px 4px 0 rgba(0,0,0,.15);
   }
 

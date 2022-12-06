@@ -15,24 +15,25 @@
   <div 
     on:click={() => dispatch('delete')}
     class="yes">
-    <div class="text">ДА</div>
+    <div class="text">Да</div>
   </div>
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div 
     on:click={() => dispatch('return')}
     class="no">
-    <div class="text">НЕТ</div>
+    <div class="text">Нет</div>
   </div>
 </div>
 
 <style>
   .open-body.delete {
-    height: 60px;
-    margin-top: 10px;
+    height: 63px;
+    /* margin-top: 10px; */
+    /* padding: 15.5px 0; */
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Roboto Slab', serif;
+    /* font-family: 'Roboto Slab', serif; */
   }
 
   .open-body.delete > * {
@@ -51,7 +52,7 @@
   }
 
   .open-body.delete .text {
-    font-family: 'Roboto Slab', serif;
+    /* font-family: 'Roboto Slab', serif; */
 
   }
 
@@ -72,6 +73,7 @@
     width: 100px;
     background-color: #D7FFD9;
     background-color: rgb(215, 255, 217,.25);
+    background: linear-gradient(270deg, rgba(165, 214, 167, .25), rgba(215, 255, 217, .25));
     
 
     border-radius:0 10px 10px 0;
@@ -83,11 +85,11 @@
   }
 
   .open-body.delete > .yes:hover {
-    box-shadow: -2px 2px 4px 0 rgba(0,0,0,.15);
+    box-shadow: -2px 0 4px 0 rgba(0,0,0,.15);
   }
 
   .open-body.delete > .no:hover {
-    box-shadow: 2px 2px 4px 0 rgba(0,0,0,.15);
+    box-shadow: 2px 0 4px 0 rgba(0,0,0,.15);
   }
 
 

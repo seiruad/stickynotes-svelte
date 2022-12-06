@@ -13,7 +13,8 @@
   export let activeColor
 
   function handleUpdate(color) {
-    if (color === activeColor) return
+    if (color === colors.premium) return
+    if (color === activeColor) dispatch('return')
     dispatch('updateColor', {color})
   }
 
@@ -104,6 +105,9 @@
 
     border-radius: 0 0 0 10px;
 }
+.picker-premium:hover {
+    cursor:not-allowed;
+}
 
 .picker.picker-premium:hover {
     box-shadow: none;
@@ -134,6 +138,7 @@
 }
 
 .picker-default.active {
+  background-color: #fafafa;
   box-shadow: 2px 2px 4px 0 rgba(0,0,0,.225);
 }
 
